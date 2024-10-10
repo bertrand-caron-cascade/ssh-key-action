@@ -56,7 +56,9 @@ export function main(): void {
         }
 
         fs.writeFileSync(pathName, file.contents, file.options);
-        createdFileNames.push(file.name);
+        if (file.mustNotExist === true) {
+            createdFileNames.push(file.name);
+        }
     }
     common.saveCreatedFileNames(createdFileNames);
 
