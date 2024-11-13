@@ -42,10 +42,17 @@ export function post(): void {
  * @param dirName directory name to remove
  */
 function removeDirectory(dirName: string): void {
-    fs.rmSync(dirName, {
-        recursive: true,
-        force: true,
-    });
+    try {
+        fs.rmSync(dirName, {
+            recursive: true,
+            force: true,
+        });
+    } catch (error: unknown) {
+        console.warn(`Could not delete directory: '${dirName}'`);
+        console.warn('Error was:');
+        console.warn(error);
+    }
+
 }
 
 /**
@@ -57,8 +64,13 @@ function removeCreatedFiles(dirName: string): string[] {
     const createdFileNames = common.loadCreatedFileNames();
     for (const fileName of createdFileNames) {
         const pathName = path.join(dirName, fileName);
-
-        fs.rmSync(pathName);
+        try {
+            fs.rmSync(pathName);
+        } catch (error: unknown) {
+            console.warn(`Could not delete file: '${pathName}'`);
+            console.warn('Error was:');
+            console.warn(error);
+        }
     }
     return createdFileNames;
 }
